@@ -3,6 +3,8 @@
 const canvas = document.querySelector('canvas')
 const context = canvas.getContext('2d')
 
+// const battleBlack = document.getElementById('battle-black')
+
 canvas.width = 1024
 canvas.height = 576
 
@@ -128,8 +130,13 @@ function rectangularCollision({rectangle1, rectangle2}) {
   )
 }
 
+const battle = {
+  initiated: false
+}
+
 function animate() {
-  window.requestAnimationFrame(animate)
+  const animationId = window.requestAnimationFrame(animate)
+  // console.log(animationId)
   background.draw()
   boundaries.forEach(boundary => {
     boundary.draw()
@@ -140,6 +147,11 @@ function animate() {
   player.draw()
   foreground.draw()
 
+  let moving = true
+  player.moving = false
+  if (battle.initiated) return
+  //! Activate Battle:
+
   if (keys.w.pressed || keys.a.pressed || keys.s.pressed || keys.d.pressed) {
     for (let i = 0; i < battleZones.length; i++) {
       const battleZone = battleZones[i]
@@ -149,15 +161,35 @@ function animate() {
         rectangle2: battleZone
       }) && 
       overlappingArea > (player.width * player.height) / 2
+      && Math.random() < 0.05
       ) {
-        console.log('BATTLE ZONE')
+        console.log('WILD POKEMON ENCOUNTERED')
+        window.cancelAnimationFrame(animationId)
+        battle.initiated = true
+        gsap.to('#battle-black', {
+          opacity: 1,
+          repeat: 3,
+          yoyo: true,
+          duration: .4,
+          onComplete() {
+            gsap.to("#battle-black", {
+              opacity: 1,
+              duration: .4,
+              onComplete() {
+                animateBattle()
+                gsap.to("#battle-black", {
+                  opacity: 0,
+                  duration: .4,
+                })
+              }
+            })
+          }
+        })
         break
       }
     }
   }
 
-  let moving = true
-  player.moving = false
 
   if (keys.s.pressed) {
     player.moving = true
@@ -253,6 +285,22 @@ function animate() {
 }
 
 animate()
+
+const battleBackgroundImage = new Image()
+battleBackgroundImage.src = './images/battleBackground.png'
+
+const battleBackground = new Sprite({
+  position: {
+    x: 0, 
+    y: 0
+  },
+  image: battleBackgroundImage
+})
+
+function animateBattle() {
+  window.requestAnimationFrame(animateBattle)
+  battleBackground.draw()
+}
 
 window.addEventListener('keydown', (e) => {
   switch (e.key) {
