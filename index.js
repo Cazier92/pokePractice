@@ -7,9 +7,13 @@ canvas.width = 1024
 canvas.height = 576
 
 const collisionsMap = []
+for (let i = 0; i < collisions.length; i += 70) {
+  collisionsMap.push(collisions.slice(i, i + 70))
+}
 
-for (let i = 0; i < collisions.length; i+= 70) {
-  collisionsMap.push(collisions.slice(i, i+70))
+const battleZonesMap = []
+for (let i = 0; i < battleZonesData.length; i += 70) {
+  battleZonesMap.push(battleZonesData.slice(i, i + 70))
 }
 
 const boundaries = []
@@ -17,6 +21,8 @@ const offset = {
   x: -1790,
   y: -100,
 }
+
+const battleZones = []
 
 collisionsMap.forEach((row, i) => {
   row.forEach((sym, j) => {
@@ -28,6 +34,19 @@ collisionsMap.forEach((row, i) => {
   }))
   })
 })
+
+battleZonesMap.forEach((row, i) => {
+  row.forEach((sym, j) => {
+    if (sym === 1025)
+    battleZones.push(new Boundary({position: {
+      x: j * 48 + offset.x,
+      y: i * 48 + offset.y,
+    }
+    
+  }))
+  })
+})
+
 
 
 const image = new Image()
@@ -96,7 +115,7 @@ const keys = {
   },
 }
 
-const movables = [background, ...boundaries, foreground]
+const movables = [background, ...boundaries, foreground, ...battleZones]
 
 function rectangularCollision({rectangle1, rectangle2}) {
   return (
@@ -115,8 +134,27 @@ function animate() {
   boundaries.forEach(boundary => {
     boundary.draw()
   })
+  battleZones.forEach(boundary => {
+    boundary.draw()
+  })
   player.draw()
   foreground.draw()
+
+  if (keys.w.pressed || keys.a.pressed || keys.s.pressed || keys.d.pressed) {
+    for (let i = 0; i < battleZones.length; i++) {
+      const battleZone = battleZones[i]
+      const overlappingArea = (Math.min(player.position.x + player.width, battleZone.position.x + battleZone.width) - Math.max(player.position.x, battleZone.position.x)) * (Math.min(player.position.y + player.height, battleZone.position.y + battleZone.height) - Math.max(player.position.y, battleZone.position.y))
+      if (rectangularCollision({
+        rectangle1: player,
+        rectangle2: battleZone
+      }) && 
+      overlappingArea > (player.width * player.height) / 2
+      ) {
+        console.log('BATTLE ZONE')
+        break
+      }
+    }
+  }
 
   let moving = true
   player.moving = false
@@ -124,6 +162,7 @@ function animate() {
   if (keys.s.pressed) {
     player.moving = true
     player.image = player.sprites.down
+
     for (let i = 0; i < boundaries.length; i++) {
       const boundary = boundaries[i]
       if (rectangularCollision({
@@ -133,11 +172,13 @@ function animate() {
           y: boundary.position.y - 3
         }}
       })) {
-        console.log('collision')
+        // console.log('collision')
         moving = false
         break
       }
     }
+    
+
     if (moving)
     movables.forEach(movable => {
       movable.position.y -= 3
@@ -155,7 +196,7 @@ function animate() {
             y: boundary.position.y + 3
           }}
         })) {
-          console.log('collision')
+          // console.log('collision')
           moving = false
           break
         }
@@ -177,7 +218,7 @@ function animate() {
             y: boundary.position.y
           }}
         })) {
-          console.log('collision')
+          // console.log('collision')
           moving = false
           break
         }
@@ -199,7 +240,7 @@ function animate() {
             y: boundary.position.y
           }}
         })) {
-          console.log('collision')
+          // console.log('collision')
           moving = false
           break
         }
