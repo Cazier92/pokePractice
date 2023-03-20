@@ -11,6 +11,7 @@ class Sprite {
     level = 1,
     attacks = [],
     enemy = false,
+    name,
   }) {
     this.position = position
     this.image = image
@@ -28,6 +29,7 @@ class Sprite {
     this.opacity = 1
     this.attacks = attacks
     this.enemy = enemy
+    this.name = name
   }
   draw() {
     context.save()
@@ -58,6 +60,8 @@ class Sprite {
     }
     attack(attack, recipient, pokemon) {
       const tl = gsap.timeline()
+      const dialogue = document.getElementById('dialogue')
+      dialogue.textContent = `${pokemon.name} used ${attack.name}!`
       if (attack.currentPP !== 0) {
         attack.currentPP--
         if (recipient.currentHP - attack.damage >= 0) {
@@ -85,6 +89,10 @@ class Sprite {
               gsap.to('#user-health-percent', {
                 width: formatAsPercentage(recipient.currentHP)
               })
+              gsap.to('#dialogue', {
+                left: 0,
+                duration: 5,
+              })
               gsap.to(recipient.position, {
                 x: recipient.position.x + 10,
                 yoyo: true,
@@ -108,11 +116,25 @@ class Sprite {
             x: this.position.x + 40,
             duration: .1,
             onComplete() {
+              
               gsap.to('#opponent-health-percent', {
                 width: formatAsPercentage(recipient.currentHP)
               })
               gsap.to('#user-health-percent', {
                 width: formatAsPercentage(pokemon.currentHP)
+              })
+              gsap.to('#dialogue', {
+                left: 0,
+                onComplete() {
+                  gsap.to('#dialogue', {
+                    duration: 2,
+                    onComplete() {
+                      gsap.to('#dialogue' , {
+                        left: '1024px'
+                      })
+                    }
+                  })
+                }
               })
               gsap.to(recipient.position, {
                 x: recipient.position.x + 10,

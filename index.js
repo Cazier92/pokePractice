@@ -14,6 +14,8 @@ const movePP = document.getElementById('move-pp')
 const userHealth = document.getElementById('user-health-percent')
 const opponentHealth = document.getElementById('opponent-health-percent')
 
+const dialogue = document.getElementById('dialogue')
+
 attack1.addEventListener('mouseover', () => {
   moveType.textContent = `${currentPokemon.attacks[0].type}`
   movePP.textContent = `PP: ${currentPokemon.attacks[0].currentPP}/${currentPokemon.attacks[0].maxPP}`
@@ -391,6 +393,7 @@ const draggle = new Sprite({
     },
   ],
   enemy: true,
+  name: 'Draggle'
 })
 
 const emby = new Sprite({
@@ -434,7 +437,8 @@ const emby = new Sprite({
       currentPP: 1,
       maxPP: 15,
     },
-  ]
+  ],
+  name: 'Emby'
 })
 
 let currentPokemon = emby
