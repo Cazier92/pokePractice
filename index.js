@@ -3,7 +3,52 @@
 const canvas = document.querySelector('canvas')
 const context = canvas.getContext('2d')
 
-// const battleBlack = document.getElementById('battle-black')
+const attack1 = document.getElementById('attack1')
+const attack2 = document.getElementById('attack2')
+const attack3 = document.getElementById('attack3')
+const attack4 = document.getElementById('attack4')
+
+const moveType = document.getElementById('attack-type')
+const movePP = document.getElementById('move-pp')
+
+const userHealth = document.getElementById('user-health-percent')
+const opponentHealth = document.getElementById('opponent-health-percent')
+
+attack1.addEventListener('mouseover', () => {
+  moveType.textContent = `${currentPokemon.attacks[0].type}`
+  movePP.textContent = `PP: ${currentPokemon.attacks[0].currentPP}/${currentPokemon.attacks[0].maxPP}`
+})
+attack2.addEventListener('mouseover', () => {
+  moveType.textContent = `${currentPokemon.attacks[1].type}`
+  movePP.textContent = `PP: ${currentPokemon.attacks[1].currentPP}/${currentPokemon.attacks[1].maxPP}`
+})
+attack3.addEventListener('mouseover', () => {
+  moveType.textContent = `${currentPokemon.attacks[2].type}`
+  movePP.textContent = `PP: ${currentPokemon.attacks[2].currentPP}/${currentPokemon.attacks[2].maxPP}`
+})
+attack4.addEventListener('mouseover', () => {
+  moveType.textContent = `${currentPokemon.attacks[3].type}`
+  movePP.textContent = `PP: ${currentPokemon.attacks[3].currentPP}/${currentPokemon.attacks[3].maxPP}`
+})
+
+
+
+attack1.addEventListener('click', () => {
+  currentPokemon.attack(currentPokemon.attacks[0], opponentPokemon, currentPokemon)
+  movePP.textContent = `PP: ${currentPokemon.attacks[0].currentPP}/${currentPokemon.attacks[0].maxPP}`
+})
+attack2.addEventListener('click', () => {
+  currentPokemon.attack(currentPokemon.attacks[1], opponentPokemon, currentPokemon)
+  movePP.textContent = `PP: ${currentPokemon.attacks[1].currentPP}/${currentPokemon.attacks[1].maxPP}`
+})
+attack3.addEventListener('click', () => {
+  currentPokemon.attack(currentPokemon.attacks[2], opponentPokemon, currentPokemon)
+  movePP.textContent = `PP: ${currentPokemon.attacks[2].currentPP}/${currentPokemon.attacks[2].maxPP}`
+})
+attack4.addEventListener('click', () => {
+  currentPokemon.attack(currentPokemon.attacks[3], opponentPokemon, currentPokemon)
+  movePP.textContent = `PP: ${currentPokemon.attacks[3].currentPP}/${currentPokemon.attacks[3].maxPP}`
+})
 
 canvas.width = 1024
 canvas.height = 576
@@ -314,6 +359,38 @@ const draggle = new Sprite({
     hold: 30,
   },
   animate: true,
+  maxHP: 100,
+  attacks: [
+    {
+      name: 'Tackle',
+      damage: 10,
+      type: 'Normal',
+      currentPP: 10,
+      maxPP: 25,
+    },
+    {
+      name: 'Flame Thrower',
+      damage: 15,
+      type: 'Fire',
+      currentPP: 5,
+      maxPP: 15,
+    },
+    {
+      name: 'Fire Blast',
+      damage: 50,
+      type: 'Fire',
+      currentPP: 2,
+      maxPP: 5,
+    },
+    {
+      name: 'Splash',
+      damage: 0,
+      type: 'Normal',
+      currentPP: 1,
+      maxPP: 15,
+    },
+  ],
+  enemy: true,
 })
 
 const emby = new Sprite({
@@ -327,16 +404,68 @@ const emby = new Sprite({
     hold: 30,
   },
   animate: true,
+  maxHP: 100,
+  attacks: [
+    {
+      name: 'Tackle',
+      damage: 10,
+      type: 'Normal',
+      currentPP: 10,
+      maxPP: 25,
+    },
+    {
+      name: 'Flame Thrower',
+      damage: 15,
+      type: 'Fire',
+      currentPP: 5,
+      maxPP: 15,
+    },
+    {
+      name: 'Fire Blast',
+      damage: 50,
+      type: 'Fire',
+      currentPP: 2,
+      maxPP: 5,
+    },
+    {
+      name: 'Splash',
+      damage: 0,
+      type: 'Normal',
+      currentPP: 1,
+      maxPP: 15,
+    },
+  ]
 })
+
+let currentPokemon = emby
+let opponentPokemon = draggle
 
 function animateBattle() {
   window.requestAnimationFrame(animateBattle)
   battleBackground.draw()
   draggle.draw()
   emby.draw()
+  updateAttacks(currentPokemon)
+  updateHealthBars()
 }
 
 animateBattle()
+
+function updateAttacks(pokemon) {
+  attack1.innerText = pokemon.attacks[0].name
+  attack2.innerText = pokemon.attacks[1].name
+  attack3.innerText = pokemon.attacks[2].name
+  attack4.innerText = pokemon.attacks[3].name
+}
+
+function updateHealthBars() {
+  if (opponentPokemon.currentHP / opponentPokemon.maxHP <= .2) {
+    opponentHealth.style.backgroundColor = 'red'
+  }
+  if (currentPokemon.currentHP / currentPokemon.maxHP <= .2) {
+    userHealth.style.backgroundColor = 'red'
+  }
+}
 
 window.addEventListener('keydown', (e) => {
   switch (e.key) {
@@ -371,4 +500,5 @@ window.addEventListener('keyup', (e) => {
       break
   }
 })
+
 
