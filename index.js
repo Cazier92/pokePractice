@@ -148,7 +148,7 @@ function animate() {
   foreground.draw()
 
   let moving = true
-  player.moving = false
+  player.animate = false
   if (battle.initiated) return
   //! Activate Battle:
 
@@ -192,7 +192,7 @@ function animate() {
 
 
   if (keys.s.pressed) {
-    player.moving = true
+    player.animate = true
     player.image = player.sprites.down
 
     for (let i = 0; i < boundaries.length; i++) {
@@ -217,7 +217,7 @@ function animate() {
     })
   }
     if (keys.w.pressed) {
-      player.moving = true
+      player.animate = true
       player.image = player.sprites.up
       for (let i = 0; i < boundaries.length; i++) {
         const boundary = boundaries[i]
@@ -239,7 +239,7 @@ function animate() {
       })
     }
     if(keys.a.pressed) {
-      player.moving = true
+      player.animate = true
       player.image = player.sprites.left
       for (let i = 0; i < boundaries.length; i++) {
         const boundary = boundaries[i]
@@ -261,7 +261,7 @@ function animate() {
       })
     }
     if(keys.d.pressed) {
-      player.moving = true
+      player.animate = true
       player.image = player.sprites.right
       for (let i = 0; i < boundaries.length; i++) {
         const boundary = boundaries[i]
@@ -284,10 +284,16 @@ function animate() {
     }
 }
 
-animate()
+// animate()
 
 const battleBackgroundImage = new Image()
 battleBackgroundImage.src = './images/battleBackground.png'
+
+const draggleImage = new Image()
+draggleImage.src = './images/draggleSprite.png'
+
+const embyImage = new Image()
+embyImage.src = './images/embySprite.png'
 
 const battleBackground = new Sprite({
   position: {
@@ -297,10 +303,40 @@ const battleBackground = new Sprite({
   image: battleBackgroundImage
 })
 
+const draggle = new Sprite({
+  position: {
+    x: 800,
+    y: 100,
+  },
+  image: draggleImage,
+  frames: {
+    max: 4,
+    hold: 30,
+  },
+  animate: true,
+})
+
+const emby = new Sprite({
+  position: {
+    x: 280,
+    y: 320,
+  },
+  image: embyImage,
+  frames: {
+    max: 4,
+    hold: 30,
+  },
+  animate: true,
+})
+
 function animateBattle() {
   window.requestAnimationFrame(animateBattle)
   battleBackground.draw()
+  draggle.draw()
+  emby.draw()
 }
+
+animateBattle()
 
 window.addEventListener('keydown', (e) => {
   switch (e.key) {

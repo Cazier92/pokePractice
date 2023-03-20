@@ -15,7 +15,39 @@
 <body>
   <div class="game-screen">
     <div class="battle-black" id="battle-black"></div>
+    <div id="opponent-bar" class="bar">
+      <h1>Draggle</h1>
+      <div class="health-div">
+        <div class="health-empty" id="opponent-health-empty"></div>
+        <div class="health-percent" id="opponent-health-percent"></div>
+      </div>
+    </div>
+    <div id="user-bar" class="bar">
+      <h1>Emby</h1>
+      <div class="health-div">
+        <div class="health-empty" id="user-health-empty"></div>
+        <div class="health-percent" id="user-health-percent"></div>
+      </div>
+    </div>
     <canvas></canvas>
+    <div id="battle-screen">
+      <div id="moves">
+        <p class="attack" id="attack1">Attack1</p>
+        <p class="attack" id="attack2">Attack2</p>
+        <p class="attack" id="attack3">Attack3</p>
+        <p class="attack" id="attack4">Attack4</p>
+      </div>
+      <div id="move-type">
+        <h1>Attack Type</h1>
+        <p>PP:</p>
+      </div>
+      <div id="options">
+        <p class="option" id="opt1">Attacks</p>
+        <p class="option" id="opt2">Items</p>
+        <p class="option" id="opt3">Pokemon</p>
+        <p class="option" id="opt4">Run</p>
+      </div>
+    </div>
   </div>
 </body>
 </html>
